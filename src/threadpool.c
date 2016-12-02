@@ -193,10 +193,7 @@ static void  taskQueuePush(taskQueue *que,task *new_task)
     pthread_mutex_lock(&que->queue_mutex);
 
     while(que->size==que->max_size && !que->stop)
-    {
-        printf("queue is full,need to wait,Asyn thread ID is: %ld\n",(long)pthread_self());
         pthread_cond_wait(&que->not_full,&que->queue_mutex);
-    }
 
     if(que->stop)
     {
@@ -226,10 +223,7 @@ static task *taskQueuePop(taskQueue *que)
     task *que_front;
     pthread_mutex_lock(&que->queue_mutex);
     while(que->size==0 && !que->stop)
-    {
-        printf("queue is empty,need to wait,Asyn thread ID is: %ld\n",(long)pthread_self());
         pthread_cond_wait(&que->not_empty,&que->queue_mutex);
-    }
 
     if(que->stop)
     {
@@ -288,22 +282,3 @@ static void taskQueueDestroy(taskQueue **que)
 
     free(*que);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
